@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: update-helm-chart
+spec:
+  params:
+    - name: helm-repo
+      type: string
+  steps:
+    - name: update-chart
+      image: alpine/helm
+      script: |
+        helm repo add myrepo $(params.helm-repo)
+        helm upgrade myapp myrepo/mychart --set image.tag=latest
