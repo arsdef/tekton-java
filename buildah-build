@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: buildah-build
+spec:
+  steps:
+    - name: build-container
+      image: quay.io/buildah/stable
+      script: |
+        buildah bud -t $(params.image-url):latest /workspace/source
