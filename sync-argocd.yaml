@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: sync-argocd-task
+spec:
+  steps:
+    - name: sync-argocd
+      image: argoproj/argocd-cli
+      script: |
+        argocd app sync myapp
