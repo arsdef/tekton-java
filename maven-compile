@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: maven-compile
+spec:
+  steps:
+    - name: compile
+      image: maven:3.6.3-jdk-11
+      script: |
+        mvn -f /workspace/source/pom.xml compile
