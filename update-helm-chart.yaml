@@ -1,14 +1,15 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: update-helm-chart
+  name: helm-update
 spec:
   params:
-    - name: helm-repo
+    - name: chart-url
       type: string
   steps:
     - name: update-chart
-      image: alpine/helm
+      image: alpine/git
       script: |
-        helm repo add myrepo $(params.helm-repo)
-        helm upgrade myapp myrepo/mychart --set image.tag=latest
+        git clone $(params.chart-url) /chart
+        cd /chart
+        sed -i 's/tag:.*/tag: $(params.IMAGE)/' values.yaml
