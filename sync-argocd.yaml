@@ -3,8 +3,15 @@ kind: Task
 metadata:
   name: sync-argocd-task
 spec:
+  params:
+    - name: app-name
+      type: string
+    - name: server
+      type: string
+    - name: auth-token
+      type: string
   steps:
-    - name: sync-argocd
+    - name: sync
       image: argoproj/argocd-cli
       script: |
-        argocd app sync myapp
+        argocd app sync $(params.app-name) --server $(params.server) --auth-token $(params.auth-token)
