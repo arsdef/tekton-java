@@ -1,0 +1,65 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: java-ci-cd-pipeline
+spec:
+  params:
+    - name: git-url
+      type: string
+    - name: registry-url
+      type: string
+    - name: helm-repo
+      type: string
+  tasks:
+    - name: git-clone
+      taskRef:
+        name: git-clone-task
+      params:
+        - name: url
+          value: "$(params.git-url)"
+    - name: compile-java
+      taskRef:
+        name: maven-compile
+      runAfter:
+        - git-clone
+    - name: unit-test
+      taskRef:
+        name: maven-test
+      runAfter:
+        - compile-java
+    - name: sonar-scan
+      taskRef:
+        name: sonar-analysis
+      runAfter:
+        - unit-test
+    - name: build-container
+      taskRef:
+        name: buildah-build
+      runAfter:
+        - sonar-scan
+    - name: analyze-image
+      taskRef:
+        name: tryvi-analyze
+      runAfter:
+        - build-container
+    - name: push-image
+      taskRef:
+        name: push-to-registry
+      runAfter:
+        - analyze-image
+      params:
+        - name: image-url
+          value: "$(params.registry-url)"
+    - name: update-helm
+      taskRef:
+        name: update-helm-chart
+      runAfter:
+        - push-image
+      params:
+        - name: helm-repo
+          value: "$(params.helm-repo)"
+    - name: integration-test
+      taskRef:
+        name: kubetest2-run
+      runAfter:
+        - update-helm
