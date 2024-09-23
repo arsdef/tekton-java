@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: git-webhook-listener
+spec:
+  serviceAccountName: tekton-triggers-sa
+  triggers:
+    - name: git-webhook-trigger
+      bindings:
+        - ref: git-trigger-binding
+      template:
+        ref: java-ci-cd-template
