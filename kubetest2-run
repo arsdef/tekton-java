@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: kubetest2-run
+spec:
+  steps:
+    - name: kubetest2
+      image: kubetest2/kubetest2
+      script: |
+        kubetest2 run --config=kubetest2-config.yaml
