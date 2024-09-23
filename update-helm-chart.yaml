@@ -3,13 +3,16 @@ kind: Task
 metadata:
   name: helm-update
 spec:
-  params:
-    - name: chart-url
+ params:
+    - name: chart-path
       type: string
+    - name: new-image
+      type: string
+  workspaces:
+    - name: source
   steps:
-    - name: update-chart
-      image: alpine/git
+    - name: update-helm
+      image: alpine
       script: |
-        git clone $(params.chart-url) /chart
-        cd /chart
-        sed -i 's/tag:.*/tag: $(params.IMAGE)/' values.yaml
+        cd $(workspaces.source.path)/$(params.chart-path)
+        sed -i 's|image: .*|image: $(params.new-image)|' values.yaml
