@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: sonar-analysis
+spec:
+  steps:
+    - name: sonar-scan
+      image: sonarsource/sonar-scanner-cli
+      script: |
+        sonar-scanner -Dsonar.projectKey=myproject -Dsonar.sources=src
