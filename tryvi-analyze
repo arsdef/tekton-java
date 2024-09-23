@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: tryvi-analyze
+spec:
+  steps:
+    - name: tryvi
+      image: tryvi/cli
+      script: |
+        tryvi analyze $(params.image-url):latest
