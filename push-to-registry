@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: push-to-registry
+spec:
+  params:
+    - name: image-url
+      type: string
+  steps:
+    - name: push-image
+      image: gcr.io/kaniko-project/executor
+      script: |
+        kaniko --destination=$(params.image-url):latest
