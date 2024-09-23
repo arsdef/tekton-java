@@ -62,4 +62,9 @@ spec:
       taskRef:
         name: kubetest2-run
       runAfter:
+        - sync-argocd
+      - name: sync-argocd
+      taskRef:
+        name: sync-argocd-task
+      runAfter:
         - update-helm
